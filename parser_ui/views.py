@@ -4,13 +4,14 @@ from django.template import RequestContext
 from telnetlib import Telnet
 import json
 
-LG_SERVER = '127.0.0.1', 1234
 
 
 def index(request):
     if request.method == 'POST':
         sentence = str(request.POST.get('txt_sentence'))
-        tn = Telnet(*LG_SERVER)
+        ip = str(request.POST.get('server_ip'))
+        port = int(request.POST.get('server_port'))
+        tn = Telnet(ip, port)
         tn.write('storeDiagramString:true,text:' + sentence + '\n')
         parsed_value = ''
         try:
