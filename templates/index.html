@@ -1,0 +1,18 @@
+<html>
+    <body>
+        <form method="post">{% csrf_token %}
+            <h3>Server:</h3>
+            IP:<input type="text" name="server_ip" />
+            Port:<input type="text" name="server_port" />
+            <br />
+            <h3>Type in a sentence:</h3>
+            <textarea name="txt_sentence">{% if show_result == True %}{{ sentence }}{% endif %}</textarea>
+            <button type="submit">Submit</button>
+        </form>
+
+        {% if show_result == True %}
+            <h3>Result:</h3>
+            <textarea cols="100" rows="10">{{ parse_response }}</textarea>
+        {% endif %}
+    </body>
+</html>
