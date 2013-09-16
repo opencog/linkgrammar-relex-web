@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+{% load bootstrap_toolkit %}
+{% load url from future %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Link Grammar</title>
+    <meta name="description" content="">
+    <meta name="author" content="Keyvan Mir Mohammad Sadeghi">
+    {% bootstrap_stylesheet_tag %}
+    {% bootstrap_stylesheet_tag "responsive" %}
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+        }
+    </style>
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}js/global.js"></script>
+    {% bootstrap_javascript_tag %}
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top navbar-inverse">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="http://www.link.cs.cmu.edu/link/">Link Grammar</a>
+            <ul class="nav">
+                <li class="active"><a href="{% url 'index' %}" class="">Parse a sentence</a></li>
+{#                <li class="dropdown">#}
+{#                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Forms<b class="caret"></b></a>#}
+{#                    <ul class="dropdown-menu">#}
+{#                        <li><a href="{% url 'demo_app.views.demo_form' %}?layout=vertical">Vertical</a></li>#}
+{#                        <li><a href="{% url 'demo_app.views.demo_form' %}?layout=horizontal">Horizontal</a></li>#}
+{#                        <li><a href="{% url 'demo_app.views.demo_form_inline' %}?layout=inline">Inline</a></li>#}
+{#                        <li><a href="{% url 'demo_app.views.demo_form_inline' %}?layout=search">Search</a></li>#}
+{#                        <li><a href="{% url 'demo_app.views.demo_form_with_template' %}?layout=horizontal">Using template</a></li>#}
+{#                    </ul>#}
+{#                </li>#}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    {% bootstrap_messages %}
+
+    {% block content %}Empty page{% endblock %}
+
+    <p><hr></p>
+
+    <footer class="row">
+        <div class="span6">
+            <p>Parse a sentence from <a href="http://www.link.cs.cmu.edu/link/">Link Grammar</a></p>
+        </div>
+        <div class="span6" style="text-align:right">
+            <p>
+                &copy; <a href="mailto:linasvepstas@gmail.com">Linas Vepstas</a> 2013                |
+            </p>
+        </div>
+    </footer>
+
+</div> <!-- container -->
+
+</body>
+</html>

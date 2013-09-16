@@ -1,18 +1,17 @@
-<html>
-    <body>
-        <form method="post">{% csrf_token %}
-            <h3>Server:</h3>
-            IP:<input type="text" name="server_ip" />
-            Port:<input type="text" name="server_port" />
-            <br />
-            <h3>Type in a sentence:</h3>
-            <textarea name="txt_sentence">{% if show_result == True %}{{ sentence }}{% endif %}</textarea>
-            <button type="submit">Submit</button>
-        </form>
+{% extends "base.html" %}
 
-        {% if show_result == True %}
-            <h3>Result:</h3>
-            <textarea cols="100" rows="10">{{ parse_response }}</textarea>
-        {% endif %}
-    </body>
-</html>
+{% load bootstrap_toolkit %}
+
+{% block extra_head %}
+    {{ form.media }}
+{% endblock %}
+
+{% block content %}
+
+    <form class="form-{{ layout }}" action="" method="post">
+        {% csrf_token %}
+            {{ form|as_bootstrap:layout }}
+            <input type="submit" value="Submit" class="btn btn-primary">
+    </form>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% load bootstrap_toolkit %}
+{% load custom_tags %}
+
+{% block extra_head %}
+    {{ form.media }}
+{% endblock %}
+
+{% block content %}
+
+    <h3 class="muted">Explore the results</h3>
+    <div class="tabbable">
+        <ul class="nav nav-tabs">
+            {% for index, view in result|indexed%}
+            <li {% if index == 1 %} class="active" {% endif %}>
+                <a href="#pane{{ index }}" data-toggle="tab" style="outline: none">
+                    Linkage {{ index }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <div class="tab-content">
+            {% for index, view in result|indexed %}
+                <div id="pane{{ index }}" class="tab-pane {% if index == 1 %}active{% endif %}">
+                  <textarea rows="15" style="width: 80%">{{ view }}</textarea>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <a type="button" class="btn btn-success" href="/">Try another sentence!</a>
+
+
+{% endblock %}

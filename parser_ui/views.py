@@ -3,15 +3,22 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from telnetlib import Telnet
 import json
+from django.template.context import RenderContext
+from parser_ui.forms import SubmitSentenceForm
 
+
+EN_SERVER = 'localhost', 1234
 
 
 def index(request):
     if request.method == 'POST':
-        sentence = str(request.POST.get('txt_sentence'))
-        ip = str(request.POST.get('server_ip'))
-        port = int(request.POST.get('server_port'))
-        tn = Telnet(ip, port)
+
+        form = SubmitSentenceForm(request.POST)
+        if not form.is_valid():
+            return render_to_response('index.html', RequestContext(request, {'form': form, 'layout': 'vertical'}))
+
+        sentence = str(form.cleaned_data['type_in_a_sentence'])
+        tn = Telnet(*EN_SERVER)
         tn.write('storeDiagramString:true,text:' + sentence + '\n')
         parsed_value = ''
         try:
@@ -23,14 +30,18 @@ def index(request):
         lines = parsed_value.split("\n", 1)
         parsed_value = lines[1]
         parsed_value = json.loads(parsed_value)
-        parse_response = 'An error occurred while trying to parse the sentence...'
+        parse_response = []
         try:
-            parse_response = parsed_value['linkages'][0]['diagramString'] +\
-                             parsed_value['linkages'][0]['constituentString']
+            for linkage in parsed_value['linkages']:
+                parse_response.append(linkage['diagramString'] + linkage['constituentString'])
         except:
             print 'error in parsing JSON response...'
+            parse_response = ['An error occurred while trying to parse the sentence...']
             raise
-        return render_to_response('index.html',
-                                  {'show_result': True, 'sentence': sentence,
-                                   'parse_response': parse_response})
-    return render_to_response('index.html', context_instance=RequestContext(request))
+        return parse_result(request, parse_response)
+    form = SubmitSentenceForm()
+    return render_to_response('index.html', RequestContext(request, {'form': form, 'layout': 'vertical'}))
+
+
+def parse_result(request, result):
+    return render_to_response('parse_result.html', RequestContext(request, {'result': result}))
