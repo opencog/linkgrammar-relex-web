@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% load bootstrap_toolkit %}
+
+{% block extra_head %}
+    {{ formset.media }}
+{% endblock %}
+
+{% block content %}
+
+    <form method="post">
+        {% csrf_token %}
+        <h3 class="muted">Server Settings</h3>
+        <div class="tabbable">
+            <ul class="nav nav-tabs">
+                {% for name, ip, port in servers %}
+                <li {% if name == 'en-dev' %} class="active" {% endif %}>
+                    <a href="#{{ name }}" data-toggle="tab" style="outline: none">
+                        {{ name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <div class="tab-content">
+                {% for name, ip, port in servers %}
+                    <div id="{{ name }}" class="tab-pane {% if name == 'en-dev' %}active{% endif %}">
+                        <span class="control-group required">
+                            <label class="control-label" for="{{ name }}-ip">IP</label>
+                            <input name="{{ name }}-ip" value="{{ ip }}" />
+                        </span>
+                        <span class="control-group required">
+                            <label class="control-label" for="{{ name }}-port">Port</label>
+                            <input name="{{ name }}-ip" value="{{ port }}" />
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <input class="btn btn-primary" type="submit" value="Save" />
+    </form>
+
+{% endblock %}

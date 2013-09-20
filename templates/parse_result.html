@@ -10,25 +10,18 @@
 {% block content %}
 
     <h3 class="muted">Explore the results</h3>
-    <div class="tabbable">
-        <ul class="nav nav-tabs">
-            {% for index, view in result|indexed%}
-            <li {% if index == 1 %} class="active" {% endif %}>
-                <a href="#pane{{ index }}" data-toggle="tab" style="outline: none">
-                    Linkage {{ index }}
-                </a>
-            </li>
-            {% endfor %}
-        </ul>
 
-        <div class="tab-content">
-            {% for index, view in result|indexed %}
-                <div id="pane{{ index }}" class="tab-pane {% if index == 1 %}active{% endif %}">
-                  <textarea rows="15" style="width: 80%">{{ view }}</textarea>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
+    {% for content in result %}
+        <textarea rows="15" style="width: 80%">{{ content }}</textarea>
+    {% endfor %}
+
+    {{ result|pagination }}
+
+    <hr>
+
+{#    {% bootstrap_pagination result url="/parse_result?page={{ page }}&flop=flip" extra="q=foo" size="mini" align="right" %}#}
+
+    {% bootstrap_pagination result url="/parse_result" align="center" size="large" %}
 
     <a type="button" class="btn btn-success" href="/">Try another sentence!</a>
 

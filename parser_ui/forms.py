@@ -1,3 +1,6 @@
+from django.forms.models import ModelForm, BaseInlineFormSet
+from parser_ui.models import Server
+
 __author__ = 'keyvan'
 
 from django import forms

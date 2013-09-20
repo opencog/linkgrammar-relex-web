@@ -6,6 +6,36 @@
  * To change this template use File | Settings | File Templates.
  */
 
+//var url = window.location;
+//// Will only work if string in href matches with location
+//$('ul.nav a[href="'+ url +'"]').parent().addClass('active');
+//
+//// Will also work for relative and absolute hrefs
+//$('ul.nav a').filter(function() {
+//    return this.href == url;
+//}).parent().addClass('active');
+
+function save_click() {
+    alert('shodes');
+    $('form').each(function () {
+        post_form_data($(this).serialize());
+    });
+}
+
+function post_form_data(data) {
+    alert('shodes');
+    $.ajax({
+        type: 'POST',
+        url: '/site_settings',
+        data: data,
+        success: function () {
+            alert('success shodes');
+        },
+        error: function (xhr) {
+            alert(xhr);
+        }
+    });
+}
 
 function validate_number(evt) {
     var e = evt || window.event;

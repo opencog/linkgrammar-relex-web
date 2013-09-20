@@ -3,12 +3,20 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from telnetlib import Telnet
 import json
-from django.template.context import RenderContext
 from parser_ui.forms import SubmitSentenceForm
+from parser_ui.models import Server
 
 
-EN_SERVER = 'localhost', 1234
+LANGUAGES = {
+    'en': 'English',
+    'ru': 'Russian',
+    'de': 'German'
+}
 
+VERSIONS = {
+    'dev': 'Development',
+    'rel': 'Release'
+}
 
 def index(request):
     if request.method == 'POST':
@@ -18,7 +26,10 @@ def index(request):
             return render_to_response('index.html', RequestContext(request, {'form': form, 'layout': 'vertical'}))
 
         sentence = str(form.cleaned_data['type_in_a_sentence'])
-        tn = Telnet(*EN_SERVER)
+        language = form.cleaned_data['language']
+        version = form.cleaned_data['choose_version']
+        server_object = Server.objects.get(language=language, version=version)
+        tn = Telnet(server_object.ip, server_object.port)
         tn.write('storeDiagramString:true,text:' + sentence + '\n')
         parsed_value = ''
         try:
@@ -45,3 +56,13 @@ def index(request):
 
 def parse_result(request, result):
     return render_to_response('parse_result.html', RequestContext(request, {'result': result}))
+
+
+def settings(request):
+    servers = {}
+    for language in LANGUAGES:
+        for version in VERSIONS:
+            servers[language + '-' + version] = Server.objects.get(language=language, version=version)
+
+    if request.method == 'POST':
+        return 

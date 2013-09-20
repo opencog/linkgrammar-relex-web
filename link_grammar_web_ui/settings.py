@@ -4,22 +4,17 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Keyvan Mir Mohammad Sadeghi', 'keyvan.m.sadeghi@gmail.com'),
+    ('Linas Vepstas', 'linasvepstas@gmail.com'),
+    ('David Hart', 'dhart@opencog.org')
 )
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
-    }
-}
+DATABASES = {}
+# Parse database configuration from $DATABASE_URL
+import dj_database_url
+DATABASES['default'] = dj_database_url.parse('postgres://iciulirvocekem:5ZSvHQFuoUOU4313Wgml3sZ3UI@ec2-54-235-154-147.compute-1.amazonaws.com:5432/d5p7hf0qnvvpeu')
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 import os

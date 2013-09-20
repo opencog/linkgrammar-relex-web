@@ -6,7 +6,8 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
                        url(r'^$', 'parser_ui.views.index', name='index'),
-                       url(r'^$parse_result', 'parser_ui.views.parse_result', name='Parse Result'),
+                       url(r'^parse_result(?P<page>)$', 'parser_ui.views.parse_result', name='parse'),
+                       url(r'^site_settings$', 'parser_ui.views.settings', name='settings'),
                        # Examples:
                        # url(r'^$', 'link_grammar_web_ui.views.home', name='home'),
                        # url(r'^link_grammar_web_ui/', include('link_grammar_web_ui.foo.urls')),
