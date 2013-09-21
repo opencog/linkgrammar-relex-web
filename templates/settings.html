@@ -14,7 +14,7 @@
         <div class="tabbable">
             <ul class="nav nav-tabs">
                 {% for name, ip, port in result %}
-                <li {% if name == 'en-dev' %} class="active" {% endif %}>
+                <li {% if name == 'English-Development' %} class="active" {% endif %}>
                     <a href="#{{ name }}" data-toggle="tab" style="outline: none">
                         {{ name }}
                     </a>
@@ -24,14 +24,14 @@
 
             <div class="tab-content">
                 {% for name, ip, port in result %}
-                    <div id="{{ name }}" class="tab-pane {% if name == 'en-dev' %}active{% endif %}">
+                    <div id="{{ name }}" class="tab-pane {% if name == 'English-Development' %}active{% endif %}">
                         <span class="control-group required">
                             <label class="control-label" for="{{ name }}-ip">IP</label>
                             <input name="{{ name }}-ip" value="{{ ip }}" />
                         </span>
                         <span class="control-group required">
                             <label class="control-label" for="{{ name }}-port">Port</label>
-                            <input name="{{ name }}-ip" value="{{ port }}" />
+                            <input name="{{ name }}-port" value="{{ port }}" />
                         </span>
                     </div>
                 {% endfor %}

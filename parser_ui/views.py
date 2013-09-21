@@ -54,6 +54,9 @@ def index(request):
             parse_response = ['An error occurred while trying to parse the sentence...']
             raise
         return redirect('/parse_result')
+    if 'settings_saved' in request.session and request.session['settings_saved']:
+        messages.success(request, 'Server settings saved successfully')
+        request.session['settings_saved'] = False
     form = SubmitSentenceForm()
     return render_to_response('index.html', RequestContext(request, {'form': form, 'layout': 'vertical'}))
 
@@ -85,31 +88,32 @@ def settings(request):
     if request.method == 'POST':
         error = False
         for name in servers:
-            server = Server()
+            server = servers[name]
             ip = request.POST.get(name + '-ip')
             port = request.POST.get(name + '-port')
             try:
                 inet_aton(ip)
             except:
-                messages.error(request, 'Invalid IP address for ' + name)
+                messages.error(request, 'Invalid IP address for ' + name + ', changes discarded')
                 error = True
                 break
             try:
                 port = int(port)
             except:
-                messages.error(request, 'Port left empty in ' + name)
+                messages.error(request, 'Invalid Port number for ' + name + ', changes discarded')
                 error = True
                 break
-            if len(port) not in [4, 5]:
-                messages.error(request, 'Invalid Port number for ' + name)
+            if len(str(port)) not in [4, 5]:
+                messages.error(request, 'Invalid Port number for ' + name + ', changes discarded')
                 error = True
                 break
             server.ip, server.port = ip, port
             server.save()
         if not error:
             request.session['settings_saved'] = True
+            return redirect('index')
 
-    server_names = servers.keys().sort()
+    server_names = sorted(servers.keys())
     result = []
     for name in server_names:
         result.append((name, servers[name].ip, servers[name].port))
