@@ -13,7 +13,7 @@
         <h3 class="muted">Server Settings</h3>
         <div class="tabbable">
             <ul class="nav nav-tabs">
-                {% for name, ip, port in servers %}
+                {% for name, ip, port in result %}
                 <li {% if name == 'en-dev' %} class="active" {% endif %}>
                     <a href="#{{ name }}" data-toggle="tab" style="outline: none">
                         {{ name }}
@@ -23,7 +23,7 @@
             </ul>
 
             <div class="tab-content">
-                {% for name, ip, port in servers %}
+                {% for name, ip, port in result %}
                     <div id="{{ name }}" class="tab-pane {% if name == 'en-dev' %}active{% endif %}">
                         <span class="control-group required">
                             <label class="control-label" for="{{ name }}-ip">IP</label>
