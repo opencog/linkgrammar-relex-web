@@ -1,13 +1,15 @@
 # Create your views here.
 from _socket import inet_aton
+from telnetlib import Telnet
+import json
+
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
-from telnetlib import Telnet
-import json
+from django.contrib import messages
+
 from parser_ui.forms import SubmitSentenceForm
 from parser_ui.models import Server
-from django.contrib import messages
 
 
 LANGUAGES = {
@@ -21,6 +23,20 @@ VERSIONS = {
     'rel': 'Release'
 }
 
+
+def _telnet(ip, port, input):
+    tn = Telnet(ip, port)
+    tn.write(input)
+    output = ''
+    try:
+        output = tn.read_all()
+    except:
+        print 'error in reading telnet response...'
+        tn.close()
+        raise
+    tn.close()
+    return output
+
 def index(request):
     if request.method == 'POST':
 
@@ -31,28 +47,41 @@ def index(request):
         sentence = str(form.cleaned_data['type_in_a_sentence'])
         language = form.cleaned_data['language']
         version = form.cleaned_data['choose_version']
+        number_of_linkages_to_show = int(request.POST.get('number_of_linkages_to_show', 5))
+        options = request.POST.getlist('options')
+        relex = request.POST.getlist('relex')
+        relex_simple, relex_opencog = None, None
+
+        if language == 'en':
+            if 'smpl' in relex:
+                server_object = Server.objects.get(language='rx', version='smp')
+                relex_simple = _telnet(server_object.ip, server_object.port, sentence)
+            if 'opcg' in relex:
+                server_object = Server.objects.get(language='rx', version='ocg')
+                relex_opencog = _telnet(server_object.ip, server_object.port, sentence)
+            request.session['relex'] = {'simple': relex_simple, 'opencog': relex_opencog}
+
         server_object = Server.objects.get(language=language, version=version)
-        tn = Telnet(server_object.ip, server_object.port)
-        tn.write('storeDiagramString:true,text:' + sentence + '\n')
-        parsed_value = ''
-        try:
-            parsed_value = tn.read_all()
-        except:
-            print 'error in reading telnet response...'
-            raise
-        tn.close()
+        parsed_value = _telnet(server_object.ip, server_object.port,
+                               'storeDiagramString:true,text:' + sentence + '\n')
         lines = parsed_value.split("\n", 1)
         parsed_value = lines[1]
-        parsed_value = json.loads(parsed_value)
-        parse_response = []
         try:
-            for linkage in parsed_value['linkages']:
-                parse_response.append(linkage['diagramString'] + linkage['constituentString'])
-            request.session['parse_response'] = parse_response
+            parsed_value = json.loads(parsed_value)
         except:
             print 'error in parsing JSON response...'
             parse_response = ['An error occurred while trying to parse the sentence...']
             raise
+        parse_response = []
+        for iteration, linkage in enumerate(parsed_value['linkages']):
+            if not 'al' in options and iteration == number_of_linkages_to_show:
+                break
+            result = linkage['diagramString']
+            if 'ct' in options:
+                result += linkage['constituentString']
+            parse_response.append(result)
+        request.session['parse_response'] = parse_response
+
         return redirect('/parse_result')
     if 'settings_saved' in request.session and request.session['settings_saved']:
         messages.success(request, 'Server settings saved successfully')
@@ -73,9 +102,19 @@ def parse_result(request, page):
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
         show_lines = paginator.page(paginator.num_pages)
-    return render_to_response('parse_result.html', RequestContext(request, {
-        'result': show_lines,
-    }))
+    return render_to_response(
+        'parse_result.html',
+        RequestContext(
+            request,
+            {
+                'result': show_lines,
+                'relex_simple': request.session['relex']['simple'],
+                'relex_opencog': request.session['relex']['opencog']
+            }
+        )
+    )
+
+
 
 
 def settings(request):
@@ -84,6 +123,9 @@ def settings(request):
         for version in VERSIONS:
             servers[LANGUAGES[language] + '-' + VERSIONS[version]] =\
                 Server.objects.get(language=language, version=version)
+
+    servers['RelEx-Simple'] = Server.objects.get(language='rx', version='smp')
+    servers['RelEx-OpenCog'] = Server.objects.get(language='rx', version='ocg')
 
     if request.method == 'POST':
         error = False
@@ -117,4 +159,4 @@ def settings(request):
     result = []
     for name in server_names:
         result.append((name, servers[name].ip, servers[name].port))
-    return render_to_response('settings.html', RequestContext(request, {'result': result}))
+    return render_to_response('settings.html', RequestContext( request,{'result': result}))
