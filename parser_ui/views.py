@@ -26,7 +26,7 @@ VERSIONS = {
 
 def _telnet(ip, port, input):
     tn = Telnet(ip, port)
-    tn.write(input)
+    tn.write(input + '\n')
     output = ''
     try:
         output = tn.read_all()
@@ -63,7 +63,7 @@ def index(request):
 
         server_object = Server.objects.get(language=language, version=version)
         parsed_value = _telnet(server_object.ip, server_object.port,
-                               'storeDiagramString:true,text:' + sentence + '\n')
+                               'storeDiagramString:true,text:' + sentence)
         lines = parsed_value.split("\n", 1)
         parsed_value = lines[1]
         try:

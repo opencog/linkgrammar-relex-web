@@ -23,6 +23,11 @@ class SubmitSentenceForm(forms.Form):
             ('ru', 'Russian'),
             ('de', 'German')
         ),
+        widget=forms.Select(
+            attrs={
+                'onchange': 'language_changed()',
+            }
+        ),
         initial='all')
 
     choose_version = forms.ChoiceField(

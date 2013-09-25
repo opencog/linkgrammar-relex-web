@@ -31,13 +31,14 @@
                         </span>
                         <span class="control-group required">
                             <label class="control-label" for="{{ name }}-port">Port</label>
-                            <input name="{{ name }}-port" value="{{ port }}" />
+                            <input name="{{ name }}-port" value="{{ port }}" onkeydown="validate_number(event)" />
                         </span>
                     </div>
                 {% endfor %}
             </div>
         </div>
 
+        <br />
         <input class="btn btn-primary" type="submit" value="Save" />
     </form>
 

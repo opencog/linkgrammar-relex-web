@@ -48,3 +48,19 @@ function show_all_links_click() {
     else
         $('#id_number_of_linkages_to_show').removeAttr('disabled');
 }
+
+function language_changed() {
+    if($('#id_language').val() != 'en')
+    {
+        $('#relex_simple').attr("disabled", "disabled");
+        $('#relex_opencog').attr("disabled", "disabled");
+
+        $('#relex_simple').removeAttr("checked")
+        $('#relex_opencog').removeAttr("checked")
+    }
+    else
+    {
+        $('#relex_simple').removeAttr('disabled');
+        $('#relex_opencog').removeAttr('disabled');
+    }
+}
