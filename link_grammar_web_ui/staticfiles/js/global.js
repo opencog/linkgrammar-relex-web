@@ -15,27 +15,6 @@
 //    return this.href == url;
 //}).parent().addClass('active');
 
-function save_click() {
-    alert('shodes');
-    $('form').each(function () {
-        post_form_data($(this).serialize());
-    });
-}
-
-function post_form_data(data) {
-    alert('shodes');
-    $.ajax({
-        type: 'POST',
-        url: '/site_settings',
-        data: data,
-        success: function () {
-            alert('success shodes');
-        },
-        error: function (xhr) {
-            alert(xhr);
-        }
-    });
-}
 
 function validate_number(evt) {
     var e = evt || window.event;
@@ -61,4 +40,11 @@ function validate_number(evt) {
         e.returnValue = false;
         if (e.preventDefault) e.preventDefault();
     }
+}
+
+function show_all_links_click() {
+    if(document.getElementById('all_links').checked)
+        $('#id_number_of_linkages_to_show').attr("disabled", "disabled");
+    else
+        $('#id_number_of_linkages_to_show').removeAttr('disabled');
 }

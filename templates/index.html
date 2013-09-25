@@ -10,7 +10,38 @@
 
     <form class="form-{{ layout }}" action="" method="post">
         {% csrf_token %}
-            {{ form|as_bootstrap:layout }}
+        {{ form|as_bootstrap:layout }}
+
+         <div class="control-group">
+             <label class="control-label">Options</label>
+             <div class="controls">
+                 <label class="checkbox">
+                     <input type="checkbox" name="options" value="ct" />
+                     Show constituent trees
+                 </label>
+
+                 <label class="checkbox">
+                     <input id="all_links" type="checkbox" name="options" value="al"
+                            onchange="show_all_links_click()"
+                             />
+                     Show all linkages
+                 </label>
+             </div>
+         </div>
+
+        <div class="control-group">
+            <label class="control-label" for="id_number_of_linkages_to_show">
+                Number of linkages to show
+            </label>
+            <div class="controls">
+                <input id="id_number_of_linkages_to_show"
+                       maxlength="3" name="number_of_linkages_to_show"
+                       onkeydown="validate_number(event)" type="number"
+                       value="5"
+                        />
+            </div>
+        </div>
+
             <input type="submit" value="Submit" class="btn btn-primary">
     </form>
 
