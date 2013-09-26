@@ -17,13 +17,18 @@
              <div class="controls">
 
                  <label class="checkbox">
-                     <input id="relex_simple" type="checkbox" name="relex" value="smpl" />
+                     <input id="relex_simple" type="checkbox" name="relex" value="smp" />
                      Show RelEx output in simple format
                  </label>
 
                  <label class="checkbox">
-                     <input id="relex_opencog" type="checkbox" name="relex" value="opcg" />
-                     Show RelEx output in in OpenCog Scheme format
+                     <input id="relex_opencog" type="checkbox" name="relex" value="ocg" />
+                     Show RelEx output in OpenCog Scheme format
+                 </label>
+
+                 <label class="checkbox">
+                     <input id="relex_stanford" type="checkbox" name="relex" value="sfd" />
+                     Show RelEx output in Stanford-compatibility mode
                  </label>
 
                  <label class="checkbox">
@@ -55,5 +60,30 @@
 
             <input type="submit" value="Submit" class="btn btn-primary">
     </form>
+
+    <script type="text/javascript">
+        $("input:radio[name='language']").click(function() {
+            var value = $(this).val();
+            if(value != 'en')
+            {
+                $('#relex_simple').attr("disabled", "disabled");
+                $('#relex_opencog').attr("disabled", "disabled");
+                $('#relex_stanford').attr("disabled", "disabled");
+                document.getElementsByName('choose_version')[0].checked = true;
+                document.getElementsByName('choose_version')[1].disabled = true;
+
+                $('#relex_simple').removeAttr("checked")
+                $('#relex_opencog').removeAttr("checked")
+                $('#relex_stanford').removeAttr("checked")
+            }
+            else
+            {
+                $('#relex_simple').removeAttr('disabled');
+                $('#relex_opencog').removeAttr('disabled');
+                $('#relex_stanford').removeAttr('disabled');
+                document.getElementsByName('choose_version')[1].disabled = false;
+            }
+        });
+    </script>
 
 {% endblock %}

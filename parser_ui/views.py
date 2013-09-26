@@ -15,13 +15,26 @@ from parser_ui.models import Server
 LANGUAGES = {
     'en': 'English',
     'ru': 'Russian',
-    'de': 'German'
+    'de': 'German',
+    'rx': 'RelEx'
 }
 
 VERSIONS = {
     'dev': 'Development',
-    'rel': 'Release'
+    'rel': 'Release',
+    'smp': 'Simple',
+    'ocg': 'OpenCog',
+    'sfd': 'Stanford-Compatibility-Mode'
 }
+
+SERVERS = [
+    ('en', 'rel'),
+    ('en', 'dev'),
+    ('ru', 'rel'),
+    ('rx', 'smp'),
+    ('rx', 'ocg'),
+    ('rx', 'sfd')
+]
 
 
 def _telnet(ip, port, input):
@@ -37,6 +50,7 @@ def _telnet(ip, port, input):
     tn.close()
     return output
 
+
 def index(request):
     if request.method == 'POST':
 
@@ -49,17 +63,13 @@ def index(request):
         version = form.cleaned_data['choose_version']
         number_of_linkages_to_show = int(request.POST.get('number_of_linkages_to_show', 5))
         options = request.POST.getlist('options')
-        relex = request.POST.getlist('relex')
-        relex_simple, relex_opencog = None, None
+        relex = {'smp': None, 'ocg': None, 'sfd': None}
 
         if language == 'en':
-            if 'smpl' in relex:
-                server_object = Server.objects.get(language='rx', version='smp')
-                relex_simple = _telnet(server_object.ip, server_object.port, sentence)
-            if 'opcg' in relex:
-                server_object = Server.objects.get(language='rx', version='ocg')
-                relex_opencog = _telnet(server_object.ip, server_object.port, sentence)
-            request.session['relex'] = {'simple': relex_simple, 'opencog': relex_opencog}
+            for relex_version in request.POST.getlist('relex'):
+                server_object = Server.objects.get(language='rx', version=relex_version)
+                relex[relex_version] = _telnet(server_object.ip, server_object.port, sentence)
+            request.session['relex'] = relex
 
         server_object = Server.objects.get(language=language, version=version)
         parsed_value = _telnet(server_object.ip, server_object.port,
@@ -86,7 +96,7 @@ def index(request):
     if 'settings_saved' in request.session and request.session['settings_saved']:
         messages.success(request, 'Server settings saved successfully')
         request.session['settings_saved'] = False
-    form = SubmitSentenceForm()
+    form = SubmitSentenceForm(initial={'language': 'en', 'choose_version': 'rel'})
     return render_to_response('index.html', RequestContext(request, {'form': form, 'layout': 'vertical'}))
 
 
@@ -108,24 +118,19 @@ def parse_result(request, page):
             request,
             {
                 'result': show_lines,
-                'relex_simple': request.session['relex']['simple'],
-                'relex_opencog': request.session['relex']['opencog']
+                'relex_simple': request.session['relex']['smp'],
+                'relex_opencog': request.session['relex']['ocg'],
+                'relex_stanford': request.session['relex']['sfd']
             }
         )
     )
 
 
-
-
 def settings(request):
     servers = {}
-    for language in LANGUAGES:
-        for version in VERSIONS:
+    for language, version in SERVERS:
             servers[LANGUAGES[language] + '-' + VERSIONS[version]] =\
                 Server.objects.get(language=language, version=version)
-
-    servers['RelEx-Simple'] = Server.objects.get(language='rx', version='smp')
-    servers['RelEx-OpenCog'] = Server.objects.get(language='rx', version='ocg')
 
     if request.method == 'POST':
         error = False

@@ -10,7 +10,6 @@ class SubmitSentenceForm(forms.Form):
         widget=forms.Textarea(
             attrs={
                 'rows': 4,
-                'cols': 50,
                 'placeholder': 'Type in a sentence here',
             }
         ),
@@ -20,19 +19,15 @@ class SubmitSentenceForm(forms.Form):
         required=True,
         choices=(
             ('en', 'English'),
-            ('ru', 'Russian'),
-            ('de', 'German')
+            ('ru', 'Russian')
         ),
-        widget=forms.Select(
-            attrs={
-                'onchange': 'language_changed()',
-            }
-        ),
-        initial='all')
+        widget=forms.RadioSelect()
+    )
 
     choose_version = forms.ChoiceField(
         choices=(
             ('rel', 'Latest release version'),
             ('dev', 'Alternate development version'),
         ),
-        initial='all')
+        widget=forms.RadioSelect()
+    )
