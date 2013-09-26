@@ -27,9 +27,7 @@
                     <div id="{{ name }}" class="tab-pane {% if name == 'English-Development' %}active{% endif %}">
                         <span class="control-group required">
                             <label class="control-label" for="{{ name }}-ip">IP</label>
-                            <input id="{{ name }}-ip" name="{{ name }}-ip"
-                                   onkeydown="validate_number(event)" type="number" value="{{ ip }}"
-                                    />
+                            <input id="{{ name }}-ip" name="{{ name }}-ip" value="{{ ip }}" />
                         </span>
                         <span class="control-group required">
                             <label class="control-label" for="{{ name }}-port">Port</label>
