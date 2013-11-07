@@ -56,7 +56,7 @@ def xnetcat(hostname, port, content):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((hostname, port))
     s.sendall(content + '\n')
-    s.shutdown(socket.SHUT_WR)
+    # s.shutdown(socket.SHUT_WR)
     output = "starting"
     while True:
         data = s.recv(1024)
