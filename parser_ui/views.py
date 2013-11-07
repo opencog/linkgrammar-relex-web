@@ -64,7 +64,8 @@ def xnetcat(hostname, port, content):
         data = s.recv(1024)
         if data == "":
             break
-        output += repr(data)
+        # output += repr(data)
+        output += data
         # print "Received:", repr(data)
     s.close()
     # print "Connection closed. full return was:", output
@@ -99,11 +100,11 @@ def index(request):
         #                       'storeDiagramString:true,text:' + sentence)
         parsed_value = xnetcat(server_object.ip, server_object.port,
                                'storeDiagramString:true,text:' + sentence)
-        lines = parsed_value.split("\n", 1)
-        parsed_value = lines[1]
         request.session['parse_response'] = "now fucking what>>", parsed_value, "<<wtf"
 
         return redirect('/parse_result')
+        lines = parsed_value.split("\n", 1)
+        parsed_value = lines[1]
 # xxxxxxxxxxxxxx
         try:
             parsed_value = json.loads(parsed_value)
