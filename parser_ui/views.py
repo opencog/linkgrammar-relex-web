@@ -62,7 +62,7 @@ def xnetcat(hostname, port, content):
         data = s.recv(1024)
         if data == "":
             break
-        output += repr(data)
+        output += data
         # print "Received:", repr(data)
     s.close()
     # print "Connection closed. full return was:", output
