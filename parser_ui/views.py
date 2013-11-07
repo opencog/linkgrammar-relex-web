@@ -52,7 +52,7 @@ def _telnet(ip, port, input):
     tn.close()
     return output
 
-def netcat(hostname, port, content):
+def xnetcat(hostname, port, content):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((hostname, port))
     s.sendall(content + '\n')
@@ -92,15 +92,15 @@ def index(request):
             for relex_version in request.POST.getlist('relex'):
                 server_object = Server.objects.get(language='rx', version=relex_version)
                 # relex[relex_version] = _telnet(server_object.ip, server_object.port, sentence)
-                relex[relex_version] = netcat(server_object.ip, server_object.port, sentence)
+                relex[relex_version] = xnetcat(server_object.ip, server_object.port, sentence)
             request.session['relex'] = relex
 
         server_object = Server.objects.get(language=language, version=version)
         # parsed_value = _telnet(server_object.ip, server_object.port,
         #                       'storeDiagramString:true,text:' + sentence)
-        parsed_value = netcat(server_object.ip, server_object.port,
+        parsed_value = xnetcat(server_object.ip, server_object.port,
                                'storeDiagramString:true,text:' + sentence)
-        request.session['parse_response'] = "duuude netcat said>>", parsed_value, "<<wtf"
+        request.session['parse_response'] = "duuude xnetcat said>>", parsed_value, "<<wtf"
 
         return redirect('/parse_result')
 # xxxxxxxxxxxxxx
