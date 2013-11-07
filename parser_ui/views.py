@@ -56,13 +56,16 @@ def netcat(hostname, port, content):
     s.connect((hostname, port))
     s.sendall(content)
     s.shutdown(socket.SHUT_WR)
+    output = ''
     while 1:
         data = s.recv(1024)
         if data == "":
             break
+        output += data
         # print "Received:", repr(data)
     # print "Connection closed."
     s.close()
+    return output
 
 
 def index(request):
