@@ -57,14 +57,15 @@ def xnetcat(hostname, port, content):
     s.connect((hostname, port))
     s.sendall(content + '\n')
     s.shutdown(socket.SHUT_WR)
-    output = ""
+    output = "starting"
     while True:
         data = s.recv(1024)
         if data == "":
             break
-        output += repr(data)
+        output += "dammit" + repr(data)
         # print "Received:", repr(data)
     s.close()
+    output += "the end"
     # print "Connection closed. full return was:", output
     # sys.stdout.flush()
     return output
