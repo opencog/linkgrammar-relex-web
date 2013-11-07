@@ -57,9 +57,9 @@ def netcat(hostname, port, content):
     s.connect((hostname, port))
     s.sendall(content + '\n')
     # s.shutdown(socket.SHUT_WR)
-    output = ''
-    while 1:
-        output + 'enter read loop'
+    output = 'ola'
+    while True:
+        output += 'enter read loop'
         data = s.recv(1024)
         if data == "":
             output += 'got EOF'
@@ -100,7 +100,7 @@ def index(request):
         #                       'storeDiagramString:true,text:' + sentence)
         parsed_value = netcat(server_object.ip, server_object.port,
                                'storeDiagramString:true,text:' + sentence)
-        request.session['parse_response'] = "duuude netcat said", parsed_value
+        request.session['parse_response'] = "duuude netcat said>>", parsed_value, "<<wtf"
 
         return redirect('/parse_result')
 # xxxxxxxxxxxxxx
