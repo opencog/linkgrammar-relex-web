@@ -56,20 +56,17 @@ def xnetcat(hostname, port, content):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((hostname, port))
     s.sendall(content + '\n')
-    # s.shutdown(socket.SHUT_WR)
-    output = 'ola'
+    s.shutdown(socket.SHUT_WR)
+    output = ""
     while True:
-        output += 'enter read loop'
         data = s.recv(1024)
         if data == "":
-            output += 'got EOF'
             break
-        output += 'got this buf' + data
+        output += repr(data)
         # print "Received:", repr(data)
-        print "duude Received:", data
     s.close()
-    print "Connection closed. full return was:", output
-    sys.stdout.flush()
+    # print "Connection closed. full return was:", output
+    # sys.stdout.flush()
     return output
 
 
@@ -100,11 +97,11 @@ def index(request):
         #                       'storeDiagramString:true,text:' + sentence)
         parsed_value = xnetcat(server_object.ip, server_object.port,
                                'storeDiagramString:true,text:' + sentence)
-        lines = parsed_value.split("\n", 1)
-        request.session['parse_response'] = "duuude xnetcat split said>>", lines, "<<wtf"
+        request.session['parse_response'] = "duuude xnetcat split said>>"+ parsed_value + "<<wtf"
 
         return redirect('/parse_result')
 # xxxxxxxxxxxxxx
+        lines = parsed_value.split("\n", 1)
         parsed_value = lines[1]
         try:
             parsed_value = json.loads(parsed_value)
