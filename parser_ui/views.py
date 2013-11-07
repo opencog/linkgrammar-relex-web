@@ -59,10 +59,12 @@ def netcat(hostname, port, content):
     # s.shutdown(socket.SHUT_WR)
     output = ''
     while 1:
+        output + 'enter read loop'
         data = s.recv(1024)
         if data == "":
+            output += 'got EOF'
             break
-        output += data
+        output += 'got this buf' + data
         # print "Received:", repr(data)
         print "duude Received:", data
     s.close()
