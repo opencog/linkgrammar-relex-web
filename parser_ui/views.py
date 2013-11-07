@@ -1,8 +1,9 @@
 # Create your views here.
 from _socket import inet_aton
 from telnetlib import Telnet
-import socket
 import json
+import socket
+import sys
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render_to_response, redirect
