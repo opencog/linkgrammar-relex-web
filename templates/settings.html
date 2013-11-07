@@ -27,13 +27,11 @@
                     <div id="{{ name }}" class="tab-pane {% if name == 'English-Development' %}active{% endif %}">
                         <span class="control-group required">
                             <label class="control-label" for="{{ name }}-ip">IP</label>
-                            <input id="{{ name }}-ip" name="{{ name }}-ip" value="{{ ip }}" />
+                            <input name="{{ name }}-ip" value="{{ ip }}" />
                         </span>
                         <span class="control-group required">
                             <label class="control-label" for="{{ name }}-port">Port</label>
-                            <input id="{{ name }}-port" name="{{ name }}-port"
-                                   onkeydown="validate_number(event)" type="number" value="{{ port }}"
-                                    />
+                            <input name="{{ name }}-port" value="{{ port }}" onkeydown="validate_number(event)" />
                         </span>
                     </div>
                 {% endfor %}
