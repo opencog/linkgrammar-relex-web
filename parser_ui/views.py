@@ -55,8 +55,8 @@ def _telnet(ip, port, input):
 def netcat(hostname, port, content):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((hostname, port))
-    s.sendall(content)
-    s.shutdown(socket.SHUT_WR)
+    s.sendall(content + '\n')
+    # s.shutdown(socket.SHUT_WR)
     output = ''
     while 1:
         data = s.recv(1024)
