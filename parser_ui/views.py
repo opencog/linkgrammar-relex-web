@@ -88,7 +88,9 @@ def index(request):
             request.session['relex'] = relex
 
         server_object = Server.objects.get(language=language, version=version)
-        parsed_value = _telnet(server_object.ip, server_object.port,
+        # parsed_value = _telnet(server_object.ip, server_object.port,
+        #                       'storeDiagramString:true,text:' + sentence)
+        parsed_value = netcat(server_object.ip, server_object.port,
                                'storeDiagramString:true,text:' + sentence)
         lines = parsed_value.split("\n", 1)
         parsed_value = lines[1]
