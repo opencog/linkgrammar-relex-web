@@ -55,17 +55,18 @@ def _telnet(ip, port, input):
 def xnetcat(hostname, port, content):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((hostname, port))
-    s.sendall(content + '\n')
+    s.sendall(content)
+    # Either heroku or django or Amazon AWS is fucked up. Closing the
+    # write half of the socket seems to aslo close the read half.
     # s.shutdown(socket.SHUT_WR)
-    output = "starting"
+    output = ""
     while True:
         data = s.recv(1024)
         if data == "":
             break
-        output += "dammit" + repr(data)
+        output += repr(data)
         # print "Received:", repr(data)
     s.close()
-    output += "the end"
     # print "Connection closed. full return was:", output
     # sys.stdout.flush()
     return output
@@ -98,9 +99,9 @@ def index(request):
         #                       'storeDiagramString:true,text:' + sentence)
         parsed_value = xnetcat(server_object.ip, server_object.port,
                                'storeDiagramString:true,text:' + sentence)
-        request.session['parse_response'] = "duuude xnetcat split said>>", parsed_value, "<<wtf"
+        #request.session['parse_response'] = "duuude xnetcat split said>>", parsed_value, "<<wtf"
 
-        return redirect('/parse_result')
+        #return redirect('/parse_result')
 # xxxxxxxxxxxxxx
         lines = parsed_value.split("\n", 1)
         parsed_value = lines[1]
