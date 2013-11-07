@@ -5,3 +5,7 @@ Demonstrates the Link Grammar parser and the RelEx dependency extractor
 via a web-based interface running on Heroku.
 
 Go to http://linkgrammar.heroku.com for the actual demo.
+
+Heroku site configuration setttings are at:
+
+   https://linkgrammar.herokuapp.com/site_settings
