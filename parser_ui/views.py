@@ -63,8 +63,10 @@ def netcat(hostname, port, content):
             break
         output += data
         # print "Received:", repr(data)
-    # print "Connection closed."
+        print "duude Received:", data
     s.close()
+    print "Connection closed. full return was:", output
+    sys.stdout.flush()
     return output
 
 
