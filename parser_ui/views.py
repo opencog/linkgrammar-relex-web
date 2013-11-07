@@ -58,7 +58,8 @@ def index(request):
         if not form.is_valid():
             return render_to_response('index.html', RequestContext(request, {'form': form, 'layout': 'vertical'}))
 
-        sentence = str(form.cleaned_data['type_in_a_sentence'])
+        # sentence = str(form.cleaned_data['type_in_a_sentence'])
+        sentence = unicode(form.cleaned_data['type_in_a_sentence'])
         language = form.cleaned_data['language']
         version = form.cleaned_data['choose_version']
         number_of_linkages_to_show = int(request.POST.get('number_of_linkages_to_show', 5))
