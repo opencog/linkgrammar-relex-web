@@ -98,6 +98,10 @@ def index(request):
         #                       'storeDiagramString:true,text:' + sentence)
         parsed_value = netcat(server_object.ip, server_object.port,
                                'storeDiagramString:true,text:' + sentence)
+        request.session['parse_response'] = "duuude netcat said", parsed_value
+
+        return redirect('/parse_result')
+# xxxxxxxxxxxxxx
         lines = parsed_value.split("\n", 1)
         parsed_value = lines[1]
         try:
