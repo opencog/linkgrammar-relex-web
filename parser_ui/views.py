@@ -1,6 +1,7 @@
 # Create your views here.
 from _socket import inet_aton
 from telnetlib import Telnet
+import socket
 import json
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -50,6 +51,19 @@ def _telnet(ip, port, input):
     tn.close()
     return output
 
+def netcat(hostname, port, content):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((hostname, port))
+    s.sendall(content)
+    s.shutdown(socket.SHUT_WR)
+    while 1:
+        data = s.recv(1024)
+        if data == "":
+            break
+        # print "Received:", repr(data)
+    # print "Connection closed."
+    s.close()
+
 
 def index(request):
     if request.method == 'POST':
@@ -69,7 +83,8 @@ def index(request):
         if language == 'en':
             for relex_version in request.POST.getlist('relex'):
                 server_object = Server.objects.get(language='rx', version=relex_version)
-                relex[relex_version] = _telnet(server_object.ip, server_object.port, sentence)
+                # relex[relex_version] = _telnet(server_object.ip, server_object.port, sentence)
+                relex[relex_version] = netcat(server_object.ip, server_object.port, sentence)
             request.session['relex'] = relex
 
         server_object = Server.objects.get(language=language, version=version)
