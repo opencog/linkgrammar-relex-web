@@ -65,6 +65,12 @@ def index(request):
             return render_to_response('index.html', RequestContext(request, {'form': form, 'layout': 'vertical'}))
 
         # sentence = str(form.cleaned_data['type_in_a_sentence'])
+
+        # OK, so it looks like the received bytes were already converted
+        # from utf8 to python's internal format (aka they were 'decoded'),
+        # so we have nothig to do here. However, before sending this out
+        # again, we need to convert python's internal format back into utf8
+        # i.e. we need to 'encode' into utf8.
         recvd_bytes = form.cleaned_data['type_in_a_sentence']
         # sentence = recvd_bytes.decode('utf-8')
         # sentence = unicode(recvd_bytes, 'utf-8')
@@ -78,14 +84,18 @@ def index(request):
         if language == 'en':
             for relex_version in request.POST.getlist('relex'):
                 server_object = Server.objects.get(language='rx', version=relex_version)
-                relex[relex_version] = xnetcat(server_object.ip, server_object.port, sentence + "\n")
+                rlx_req = sentence + "\n"
+                rlx_bytes = rlx_req.encode('utf-8')
+                rlx_rcv = xnetcat(server_object.ip, server_object.port, rlx_bytes)
+                relex[relex_version] = rlx_rcv.decode('utf8')
             request.session['relex'] = relex
 
         server_object = Server.objects.get(language=language, version=version)
 
         lg_req = 'storeDiagramString:true,text:' + sentence + "\n"
         send_bytes = lg_req.encode('utf-8')
-        parsed_value = xnetcat(server_object.ip, server_object.port, send_bytes)
+        recvd_bytes = xnetcat(server_object.ip, server_object.port, send_bytes)
+        parsed_value = recvd_bytes.decode('utf-8')
         lines = parsed_value.split("\n", 1)
         parsed_value = lines[1]
 
