@@ -66,7 +66,6 @@ def xnetcat(hostname, port, content):
         if data == "":
             output += ""
             break
-        # output += repr(data)
         output += data
         # print "Received:", repr(data)
     s.close()
@@ -82,8 +81,8 @@ def index(request):
         if not form.is_valid():
             return render_to_response('index.html', RequestContext(request, {'form': form, 'layout': 'vertical'}))
 
-        sentence = str(form.cleaned_data['type_in_a_sentence'])
-        # sentence = unicode(form.cleaned_data['type_in_a_sentence'])
+        # sentence = str(form.cleaned_data['type_in_a_sentence'])
+        sentence = unicode(form.cleaned_data['type_in_a_sentence'])
         language = form.cleaned_data['language']
         version = form.cleaned_data['choose_version']
         number_of_linkages_to_show = int(request.POST.get('number_of_linkages_to_show', 5))
@@ -93,8 +92,8 @@ def index(request):
         if language == 'en':
             for relex_version in request.POST.getlist('relex'):
                 server_object = Server.objects.get(language='rx', version=relex_version)
-                relex[relex_version] = _telnet(server_object.ip, server_object.port, sentence)
-                # relex[relex_version] = xnetcat(server_object.ip, server_object.port, sentence)
+                # relex[relex_version] = _telnet(server_object.ip, server_object.port, sentence)
+                relex[relex_version] = xnetcat(server_object.ip, server_object.port, sentence)
             request.session['relex'] = relex
 
         server_object = Server.objects.get(language=language, version=version)
