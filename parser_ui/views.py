@@ -68,7 +68,7 @@ def index(request):
 
         # OK, so it looks like the received bytes were already converted
         # from utf8 to python's internal format (aka they were 'decoded'),
-        # so we have nothig to do here. However, before sending this out
+        # so we have nothing to do here. However, before sending this out
         # again, we need to convert python's internal format back into utf8
         # i.e. we need to 'encode' into utf8.
         recvd_bytes = form.cleaned_data['type_in_a_sentence']
@@ -85,6 +85,8 @@ def index(request):
             for relex_version in request.POST.getlist('relex'):
                 server_object = Server.objects.get(language='rx', version=relex_version)
                 rlx_req = sentence + "\n"
+                # Convert pythons internal rep into valid utf8 before sending it out.
+                # After receiving, convert utf8 back to python's internal format.
                 rlx_bytes = rlx_req.encode('utf-8')
                 rlx_rcv = xnetcat(server_object.ip, server_object.port, rlx_bytes)
                 relex[relex_version] = rlx_rcv.decode('utf8')
@@ -93,6 +95,9 @@ def index(request):
         server_object = Server.objects.get(language=language, version=version)
 
         lg_req = 'storeDiagramString:true,text:' + sentence + "\n"
+
+        # Convert pythons internal rep into valid utf8 before sending it out.
+        # After receiving, convert utf8 back to python's internal format.
         send_bytes = lg_req.encode('utf-8')
         recvd_bytes = xnetcat(server_object.ip, server_object.port, send_bytes)
         parsed_value = recvd_bytes.decode('utf-8')
