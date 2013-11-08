@@ -96,13 +96,13 @@ def index(request):
             request.session['relex'] = relex
 
         server_object = Server.objects.get(language=language, version=version)
-        parsed_value = _telnet(server_object.ip, server_object.port,
+        # parsed_value = _telnet(server_object.ip, server_object.port,
+        #                      'storeDiagramString:true,text:' + sentence)
+        parsed_value = xnetcat(server_object.ip, server_object.port,
                               'storeDiagramString:true,text:' + sentence)
-        # parsed_value = xnetcat(server_object.ip, server_object.port,
-        #                       'storeDiagramString:true,text:' + sentence)
-        # request.session['parse_response'] = "now fucking what>>", parsed_value, "<<wtf"
+        request.session['parse_response'] = "now what>>", parsed_value, "<<wtf"
 
-        # return redirect('/parse_result')
+        return redirect('/parse_result')
         lines = parsed_value.split("\n", 1)
         parsed_value = lines[1]
 # xxxxxxxxxxxxxx
