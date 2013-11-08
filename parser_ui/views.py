@@ -127,9 +127,11 @@ def index(request):
         request.session['parse_response'] = parse_response
 
         return redirect('/parse_result')
+
     if 'settings_saved' in request.session and request.session['settings_saved']:
         messages.success(request, 'Server settings saved successfully')
         request.session['settings_saved'] = False
+
     form = SubmitSentenceForm(initial={'language': 'en', 'choose_version': 'rel'})
     return render_to_response('index.html', RequestContext(request, {'form': form, 'layout': 'vertical'}))
 
@@ -146,12 +148,15 @@ def parse_result(request, page):
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
         show_lines = paginator.page(paginator.num_pages)
+
+    show_lines_utf8 = show_lines.encode('utf-8')
+
     return render_to_response(
         'parse_result.html',
         RequestContext(
             request,
             {
-                'result': show_lines,
+                'result': show_lines_utf8,
                 'relex_simple': request.session['relex']['smp'],
                 'relex_opencog': request.session['relex']['ocg'],
                 'relex_stanford': request.session['relex']['sfd']
