@@ -66,9 +66,9 @@ def index(request):
 
         # sentence = str(form.cleaned_data['type_in_a_sentence'])
         recvd_bytes = form.cleaned_data['type_in_a_sentence']
-        sentence = recvd_bytes.decode('utf-8')
+        # sentence = recvd_bytes.decode('utf-8')
         # sentence = unicode(recvd_bytes, 'utf-8')
-        # sentence = recvd_bytes
+        sentence = recvd_bytes
         language = form.cleaned_data['language']
         version = form.cleaned_data['choose_version']
         number_of_linkages_to_show = int(request.POST.get('number_of_linkages_to_show', 5))
@@ -84,7 +84,8 @@ def index(request):
         server_object = Server.objects.get(language=language, version=version)
 
         lg_req = 'storeDiagramString:true,text:' + sentence + "\n"
-        parsed_value = xnetcat(server_object.ip, server_object.port, lg_req.encode('utf-8'))
+        send_bytes = lg_req.encode('utf-8')
+        parsed_value = xnetcat(server_object.ip, server_object.port, send_bytes)
         lines = parsed_value.split("\n", 1)
         parsed_value = lines[1]
 
