@@ -89,7 +89,7 @@ def index(request):
                 # After receiving, convert utf8 back to python's internal format.
                 rlx_bytes = rlx_req.encode('utf-8')
                 rlx_rcv = xnetcat(server_object.ip, server_object.port, rlx_bytes)
-                relex[relex_version] = rlx_rcv.decode('utf8')
+                # relex[relex_version] = rlx_rcv.decode('utf8')
             request.session['relex'] = relex
 
         server_object = Server.objects.get(language=language, version=version)
@@ -100,7 +100,7 @@ def index(request):
         # After receiving, convert utf8 back to python's internal format.
         send_bytes = lg_req.encode('utf-8')
         recvd_bytes = xnetcat(server_object.ip, server_object.port, send_bytes)
-        parsed_value = recvd_bytes.decode('utf-8')
+        # parsed_value = recvd_bytes.decode('utf-8')
         lines = parsed_value.split("\n", 1)
         parsed_value = lines[1]
 
