@@ -65,7 +65,8 @@ def xnetcat(hostname, port, content):
         if data == "":
             output += "got EOF"
             break
-        output += "got this:" + repr(data)
+        # output += "got this:" + repr(data)
+        output += "got this:" + data
         # output += data
         # print "Received:", repr(data)
     s.close()
