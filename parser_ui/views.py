@@ -149,14 +149,12 @@ def parse_result(request, page):
         # If page is out of range (e.g. 9999), deliver last page of results.
         show_lines = paginator.page(paginator.num_pages)
 
-    show_lines_utf8 = show_lines.encode('utf-8')
-
     return render_to_response(
         'parse_result.html',
         RequestContext(
             request,
             {
-                'result': show_lines_utf8,
+                'result': show_lines,
                 'relex_simple': request.session['relex']['smp'],
                 'relex_opencog': request.session['relex']['ocg'],
                 'relex_stanford': request.session['relex']['sfd']
