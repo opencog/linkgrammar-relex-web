@@ -55,18 +55,18 @@ def _telnet(ip, port, input):
 def xnetcat(hostname, port, content):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((hostname, port))
+    # The newline character is critical; without it, nothing works.
     s.sendall(content + "\n")
     # Either heroku or django or Amazon AWS is fucked up. Closing the
     # write half of the socket seems to aslo close the read half.
     # s.shutdown(socket.SHUT_WR)
-    output = "wtf"
+    output = ""
     while True:
         data = s.recv(1024)
         if data == "":
-            output += "got EOF"
+            output += ""
             break
-        output += "got this:" + repr(data)
-        # output += "got this:" + data
+        output += repr(data)
         # output += data
         # print "Received:", repr(data)
     s.close()
@@ -102,11 +102,11 @@ def index(request):
         #                     'storeDiagramString:true,text:' + sentence)
         parsed_value = xnetcat(server_object.ip, server_object.port,
                              'storeDiagramString:true,text:' + sentence)
-        request.session['parse_response'] = "now what>>", parsed_value, "<<wtf"
-
-        return redirect('/parse_result')
         lines = parsed_value.split("\n", 1)
         parsed_value = lines[1]
+        request.session['parse_response'] = "ola now what>>", parsed_value, "<<wtf"
+
+        return redirect('/parse_result')
 # xxxxxxxxxxxxxx
         try:
             parsed_value = json.loads(parsed_value)
