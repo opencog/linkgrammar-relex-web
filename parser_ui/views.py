@@ -64,8 +64,8 @@ def xnetcat(hostname, port, content):
         data = s.recv(1024)
         if data == "":
             break
-        # output += repr(data)
-        output += data
+        output += repr(data)
+        # output += data
         # print "Received:", repr(data)
     s.close()
     # print "Connection closed. full return was:", output
@@ -96,10 +96,10 @@ def index(request):
             request.session['relex'] = relex
 
         server_object = Server.objects.get(language=language, version=version)
-        parsed_value = _telnet(server_object.ip, server_object.port,
-                              'storeDiagramString:true,text:' + sentence)
-        # parsed_value = xnetcat(server_object.ip, server_object.port,
+        # parsed_value = _telnet(server_object.ip, server_object.port,
         #                      'storeDiagramString:true,text:' + sentence)
+        parsed_value = xnetcat(server_object.ip, server_object.port,
+                             'storeDiagramString:true,text:' + sentence)
         request.session['parse_response'] = "now what>>", parsed_value, "<<wtf"
 
         return redirect('/parse_result')
