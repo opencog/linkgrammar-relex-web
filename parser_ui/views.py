@@ -82,8 +82,8 @@ def index(request):
         if not form.is_valid():
             return render_to_response('index.html', RequestContext(request, {'form': form, 'layout': 'vertical'}))
 
-        # sentence = str(form.cleaned_data['type_in_a_sentence'])
-        sentence = unicode(form.cleaned_data['type_in_a_sentence'])
+        sentence = str(form.cleaned_data['type_in_a_sentence'])
+        # sentence = unicode(form.cleaned_data['type_in_a_sentence'])
         language = form.cleaned_data['language']
         version = form.cleaned_data['choose_version']
         number_of_linkages_to_show = int(request.POST.get('number_of_linkages_to_show', 5))
@@ -98,13 +98,13 @@ def index(request):
             request.session['relex'] = relex
 
         server_object = Server.objects.get(language=language, version=version)
-        # parsed_value = _telnet(server_object.ip, server_object.port,
-        #                      'storeDiagramString:true,text:' + sentence)
-        parsed_value = xnetcat(server_object.ip, server_object.port,
+        parsed_value = _telnet(server_object.ip, server_object.port,
                              'storeDiagramString:true,text:' + sentence)
-        request.session['parse_response'] = "now what>>", parsed_value, "<<wtf"
+        # parsed_value = xnetcat(server_object.ip, server_object.port,
+        #                      'storeDiagramString:true,text:' + sentence)
+        # request.session['parse_response'] = "now what>>", parsed_value, "<<wtf"
 
-        return redirect('/parse_result')
+        # return redirect('/parse_result')
         lines = parsed_value.split("\n", 1)
         parsed_value = lines[1]
 # xxxxxxxxxxxxxx
