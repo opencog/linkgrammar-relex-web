@@ -1,6 +1,5 @@
 # Create your views here.
 from _socket import inet_aton
-from telnetlib import Telnet
 import json
 import socket
 import sys
@@ -38,25 +37,10 @@ SERVERS = [
     ('rx', 'sfd')
 ]
 
-
-def _telnet(ip, port, input):
-    tn = Telnet(ip, port)
-    tn.write(input + '\n')
-    output = ''
-    try:
-        output = tn.read_all()
-    except:
-        print 'error in reading telnet response...'
-        tn.close()
-        raise
-    tn.close()
-    return output
-
 def xnetcat(hostname, port, content):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((hostname, port))
-    # The newline character is critical; without it, nothing works.
-    s.sendall(content + "\n")
+    s.sendall(content)
     # Either heroku or django or Amazon AWS is fucked up. Closing the
     # write half of the socket seems to aslo close the read half.
     # s.shutdown(socket.SHUT_WR)
@@ -64,7 +48,6 @@ def xnetcat(hostname, port, content):
     while True:
         data = s.recv(1024)
         if data == "":
-            output += ""
             break
         output += data
         # print "Received:", repr(data)
@@ -93,15 +76,15 @@ def index(request):
             for relex_version in request.POST.getlist('relex'):
                 server_object = Server.objects.get(language='rx', version=relex_version)
                 # relex[relex_version] = _telnet(server_object.ip, server_object.port, sentence)
-                relex[relex_version] = xnetcat(server_object.ip, server_object.port, sentence)
+                relex[relex_version] = xnetcat(server_object.ip, server_object.port, sentence + "\n")
             request.session['relex'] = relex
 
         server_object = Server.objects.get(language=language, version=version)
         # parsed_value = _telnet(server_object.ip, server_object.port,
         #                     'storeDiagramString:true,text:' + sentence)
-        parsed_value = xnetcat(server_object.ip, server_object.port,
-                             'storeDiagramString:true,text:' + sentence)
-        # lines = parsed_value.split("\\n", 1)
+
+        lg_req = 'storeDiagramString:true,text:' + sentence + "\n"
+        parsed_value = xnetcat(server_object.ip, server_object.port, lg_req)
         lines = parsed_value.split("\n", 1)
         parsed_value = lines[1]
         # request.session['parse_response'] = "ola now what>>", parsed_value, "<<wtf"
