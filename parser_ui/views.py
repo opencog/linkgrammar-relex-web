@@ -58,13 +58,14 @@ def xnetcat(hostname, port, content):
     s.sendall(content)
     # Either heroku or django or Amazon AWS is fucked up. Closing the
     # write half of the socket seems to aslo close the read half.
-    s.shutdown(socket.SHUT_WR)
+    # s.shutdown(socket.SHUT_WR)
     output = "wtf"
     while True:
         data = s.recv(1024)
         if data == "":
+            output += "got EOF"
             break
-        output += repr(data)
+        output += "got this:" + repr(data)
         # output += data
         # print "Received:", repr(data)
     s.close()
