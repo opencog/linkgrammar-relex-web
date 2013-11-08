@@ -87,10 +87,12 @@ def index(request):
                 rlx_req = sentence + "\n"
                 # Convert pythons internal rep into valid utf8 before sending it out.
                 # After receiving, convert utf8 back to python's internal format.
+                #XXX doesn't matter if we decode the received message or not,
+                # it gets displayed as ????
                 rlx_bytes = rlx_req.encode('utf-8')
                 rlx_rcv = xnetcat(server_object.ip, server_object.port, rlx_bytes)
-                # relex[relex_version] = rlx_rcv.decode('utf8')
-                relex[relex_version] = rlx_rcv
+                relex[relex_version] = rlx_rcv.decode('utf8')
+                # relex[relex_version] = rlx_rcv
             request.session['relex'] = relex
 
         server_object = Server.objects.get(language=language, version=version)
@@ -99,10 +101,12 @@ def index(request):
 
         # Convert pythons internal rep into valid utf8 before sending it out.
         # After receiving, convert utf8 back to python's internal format.
+        #XXX doesn't matter if we decode the received message or not,
+        # it gets displayed as ????
         send_bytes = lg_req.encode('utf-8')
         recvd_bytes = xnetcat(server_object.ip, server_object.port, send_bytes)
-        # parsed_value = recvd_bytes.decode('utf-8')
-        parsed_value = recvd_bytes
+        parsed_value = recvd_bytes.decode('utf-8')
+        # parsed_value = recvd_bytes
         lines = parsed_value.split("\n", 1)
         parsed_value = lines[1]
 
